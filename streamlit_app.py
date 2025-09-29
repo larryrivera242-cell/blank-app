@@ -2,7 +2,7 @@ import streamlit as st
 
 st.title("Customer Scheduler")
 st.text_input("Customer Name")
-st.time_input("Job Time")
+
 import streamlit as st
 
 st.subheader("Pick a time (12-hour)")
