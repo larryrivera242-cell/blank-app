@@ -1,19 +1,36 @@
 import streamlit as st
+import pandas as pd
+import os
 
 st.title("Customer Scheduler")
 
-# Customer Name
+# Input fields
 customer = st.text_input("Customer Name")
-
-# Pick time in 12-hour format
 hour = st.selectbox("Hour", list(range(1, 13)))
 minute = st.selectbox("Minute", [0, 15, 30, 45])
 ampm = st.radio("AM/PM", ["AM", "PM"], horizontal=True)
 
 display_time = f"{hour:02d}:{minute:02d} {ampm}"
 
-st.write("Selected Time:", display_time)
+# Save button
+if st.button("Save Job"):
+    # Load existing data if file exists
+    if os.path.exists("schedule.csv"):
+        df = pd.read_csv("schedule.csv")
+    else:
+        df = pd.DataFrame(columns=["Customer", "Time"])
 
-# Show summary
-if customer:
+    # Add new row
+    new_entry = {"Customer": customer, "Time": display_time}
+    df = pd.concat([df, pd.DataFrame([new_entry])], ignore_index=True)
+
+    # Save back to CSV
+    df.to_csv("schedule.csv", index=False)
+
     st.success(f"Job for {customer} scheduled at {display_time}")
+
+# Show saved schedule
+if os.path.exists("schedule.csv"):
+    st.subheader("All Scheduled Jobs")
+    df = pd.read_csv("schedule.csv")
+    st.table(df)
