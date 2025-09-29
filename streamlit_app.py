@@ -27,4 +27,24 @@ if st.button("Save Job"):
     df = pd.concat([df, pd.DataFrame([new_entry])], ignore_index=True)
 
     # Save back to CSV
-    df.to_csv(_
+    df.to_csv("schedule.csv", index=False)
+
+    st.success(f"Job for {customer} scheduled on {date} at {display_time}")
+
+# Show saved schedule
+if os.path.exists("schedule.csv"):
+    st.subheader("All Scheduled Jobs")
+    df = pd.read_csv("schedule.csv")
+
+    # Convert Date column to datetime
+    df["Date"] = pd.to_datetime(df["Date"]).dt.date
+
+    # Show today's jobs only
+    today = datetime.date.today()
+    st.write(f"📅 Showing jobs for today: {today}")
+    todays_jobs = df[df["Date"] == today]
+
+    if not todays_jobs.empty:
+        st.table(todays_jobs)
+    else:
+        st.info("No jobs scheduled for today.")
