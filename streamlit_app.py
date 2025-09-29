@@ -1,12 +1,13 @@
 import streamlit as st
 import pandas as pd
 import os
+import datetime
 
 st.title("Customer Scheduler")
 
 # Input fields
 customer = st.text_input("Customer Name")
-date = st.date_input("Job Date")  # New date picker
+date = st.date_input("Job Date")  # Date picker
 hour = st.selectbox("Hour", list(range(1, 13)))
 minute = st.selectbox("Minute", [0, 15, 30, 45])
 ampm = st.radio("AM/PM", ["AM", "PM"], horizontal=True)
@@ -26,12 +27,4 @@ if st.button("Save Job"):
     df = pd.concat([df, pd.DataFrame([new_entry])], ignore_index=True)
 
     # Save back to CSV
-    df.to_csv("schedule.csv", index=False)
-
-    st.success(f"Job for {customer} scheduled on {date} at {display_time}")
-
-# Show saved schedule
-if os.path.exists("schedule.csv"):
-    st.subheader("All Scheduled Jobs")
-    df = pd.read_csv("schedule.csv")
-    st.table(df)
+    df.to_csv(_
